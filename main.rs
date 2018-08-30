@@ -26,15 +26,16 @@ fn tokenize(expression: &str) -> Vec<Token> {
     let mut tokens: Vec<Token> = Vec::new();
 
     for character in expression.chars() {
-        let kind: Option<String> = match character {
-            c if is_digit(c) => Some(String::from("literal")),
-            c if is_operator(c) => Some(String::from("operator")),
+        let token: Option<Token> = match character {
+            c if is_digit(c) => {
+                let kind = String::from("literal");
+                Some(Token { kind: kind, value: character })
+            },
+            c if is_operator(c) => {
+                let kind = String::from("operator");
+                Some(Token { kind: kind, value: character })
+            },
             _ => None
-        };
-
-        let token: Option<Token> = match kind {
-            Some(s) => Some(Token { kind: s, value: character }),
-            None => None
         };
 
         match token {
