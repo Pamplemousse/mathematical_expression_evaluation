@@ -2,12 +2,13 @@ use std::fmt::{Display, Formatter, Error};
 
 struct Token {
     kind: String,
-    value: char
+    value: Vec<char>
 }
 
 impl Display for Token {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
-        write!(f, "{}: {}", self.kind, self.value)
+        let value: String = self.value.iter().collect();
+        write!(f, "{}: {}", self.kind, value)
     }
 }
 
@@ -29,11 +30,15 @@ fn tokenize(expression: &str) -> Vec<Token> {
         let token: Option<Token> = match character {
             c if is_digit(c) => {
                 let kind = String::from("literal");
-                Some(Token { kind: kind, value: character })
+                let mut characters: Vec<char> = Vec::new();
+                characters.push(c);
+                Some(Token { kind: kind, value: characters })
             },
             c if is_operator(c) => {
                 let kind = String::from("operator");
-                Some(Token { kind: kind, value: character })
+                let mut characters: Vec<char> = Vec::new();
+                characters.push(c);
+                Some(Token { kind: kind, value: characters })
             },
             _ => None
         };
