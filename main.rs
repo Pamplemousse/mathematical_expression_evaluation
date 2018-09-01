@@ -13,7 +13,7 @@ impl Display for Token {
 }
 
 fn main() {
-    let string = "22*3+4";
+    let string = "22*35+444";
 
     let tokens: Vec<Token> = tokenize(string);
     for token in tokens {
@@ -25,28 +25,39 @@ fn main() {
 
 fn tokenize(expression: &str) -> Vec<Token> {
     let mut tokens: Vec<Token> = Vec::new();
+    let mut literal_buffer: Vec<char> = Vec::new();
 
     for character in expression.chars() {
-        let token: Option<Token> = match character {
+        match character {
             c if is_digit(c) => {
-                let kind = String::from("literal");
-                let mut characters: Vec<char> = Vec::new();
-                characters.push(c);
-                Some(Token { kind: kind, value: characters })
+                literal_buffer.push(character);
             },
             c if is_operator(c) => {
+                if !(literal_buffer.is_empty()) {
+                    let kind = String::from("literal");
+                    tokens.push(
+                        Token { kind: kind, value: literal_buffer.clone() }
+                    );
+                    literal_buffer.clear();
+                }
+
                 let kind = String::from("operator");
                 let mut characters: Vec<char> = Vec::new();
                 characters.push(c);
-                Some(Token { kind: kind, value: characters })
+                tokens.push(
+                    Token { kind: kind, value: characters }
+                );
             },
-            _ => None
+            _ => ()
         };
+    }
 
-        match token {
-            Some(x) => tokens.push(x),
-            None => ()
-        }
+    if !(literal_buffer.is_empty()) {
+        let kind = String::from("literal");
+        tokens.push(
+            Token { kind: kind, value: literal_buffer.clone() }
+        );
+        literal_buffer.clear();
     }
 
     return tokens;
