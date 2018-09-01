@@ -1,14 +1,14 @@
-mod tokenizer;
+use std::env;
 
+mod tokenizer;
 use tokenizer::*;
 
 fn main() {
-    let string = "22*35+444";
+    let args: Vec<String> = env::args().collect();
+    let string = &args[1];
 
     let tokens: Vec<Token> = tokenize(string);
     for token in tokens {
         println!("{}", token)
     }
-
-    println!("\n{} = ...42", string);
 }
