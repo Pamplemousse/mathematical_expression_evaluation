@@ -1,0 +1,10 @@
+[package]
+name = "math_eval"
+version = "0.1.0"
+authors = ["Pamplemousse <xav.maso@gmail.com>"]
+
+[dependencies]
+
+[[bin]]
+name = "math_eval"
+path = "src/main.rs"
