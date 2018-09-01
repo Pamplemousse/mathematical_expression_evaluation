@@ -1,4 +1,4 @@
-use std::fmt::{Display, Formatter, Error};
+use std::fmt::{Debug, Display, Formatter, Error};
 
 pub struct Token {
     kind: String,
@@ -8,6 +8,19 @@ pub struct Token {
 impl Display for Token {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         write!(f, "{}: {}", self.kind, self.value)
+    }
+}
+
+impl Debug for Token {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
+        write!(f, "Token {{ kind: {}, value: {} }}", self.kind, self.value)
+    }
+}
+
+impl PartialEq for Token {
+    fn eq(&self, other: &Token) -> bool {
+        self.kind == other.kind
+          && self.value == other.value
     }
 }
 
@@ -61,4 +74,35 @@ pub fn tokenize(expression: &str) -> Vec<Token> {
     pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
 
     return tokens;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn tokenize_creates_tokens_from_a_string() {
+        let string = "2*3";
+        let result: Vec<Token> = tokenize(string);
+
+        let mut expected_result: Vec<Token> = Vec::new();
+        expected_result.push(Token { kind: String::from("literal"), value: String::from("2") });
+        expected_result.push(Token { kind: String::from("operator"), value: String::from("*") });
+        expected_result.push(Token { kind: String::from("literal"), value: String::from("3") });
+
+        assert_eq!(result, expected_result);
+    }
+
+    #[test]
+    fn tokenize_deals_with_multiple_digits_numbers() {
+        let string = "22*33";
+        let result: Vec<Token> = tokenize(string);
+
+        let mut expected_result: Vec<Token> = Vec::new();
+        expected_result.push(Token { kind: String::from("literal"), value: String::from("22") });
+        expected_result.push(Token { kind: String::from("operator"), value: String::from("*") });
+        expected_result.push(Token { kind: String::from("literal"), value: String::from("33") });
+
+        assert_eq!(result, expected_result);
+    }
 }
