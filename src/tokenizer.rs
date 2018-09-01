@@ -2,13 +2,12 @@ use std::fmt::{Display, Formatter, Error};
 
 pub struct Token {
     kind: String,
-    value: Vec<char>
+    value: String
 }
 
 impl Display for Token {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
-        let value: String = self.value.iter().collect();
-        write!(f, "{}: {}", self.kind, value)
+        write!(f, "{}: {}", self.kind, self.value)
     }
 }
 
@@ -30,7 +29,7 @@ pub fn tokenize(expression: &str) -> Vec<Token> {
     fn pop_buffer_to_tokens(buffer: &mut Vec<char>, tokens: &mut Vec<Token>, kind: String) {
         tokens.push(
             Token { kind: kind,
-                    value: buffer.clone() }
+                    value: buffer.clone().into_iter().collect() }
         );
         buffer.clear();
     }
