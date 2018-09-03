@@ -69,24 +69,25 @@ pub fn tokenize(expression: &str) -> Vec<Token> {
             pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
         }
 
-        match character {
+        buffer.push(character);
+
+        let kind: Option<String> = match character {
             c if is_left_parenthesis(c) => {
-                buffer.push(character);
-                let kind = String::from("left_parenthesis");
-                pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
+                Some(String::from("left_parenthesis"))
             },
             c if is_right_parenthesis(c) => {
-                buffer.push(character);
-                let kind = String::from("right_parenthesis");
-                pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
+                Some(String::from("right_parenthesis"))
             },
             c if is_operator(c) => {
-                buffer.push(character);
-                let kind = String::from("operator");
-                pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
+                Some(String::from("operator"))
             },
-            _ => ()
+            _ => None
         };
+
+        match kind {
+            Some(kind) => pop_buffer_to_tokens(&mut buffer, &mut tokens, kind),
+            _ => ()
+        }
     }
 
     // If the expression finishes with a literal, the buffer will contain it
