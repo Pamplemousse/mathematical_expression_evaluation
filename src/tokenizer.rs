@@ -59,36 +59,28 @@ pub fn tokenize(expression: &str) -> Vec<Token> {
     let mut buffer: Vec<char> = Vec::new();
 
     for character in expression.chars() {
-        match character {
-            c if is_digit(c) => {
-                buffer.push(character);
-            },
-            c if is_left_parenthesis(c) => {
-                if !(buffer.is_empty()) {
-                    let kind = String::from("literal");
-                    pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
-                }
+        if is_digit(character) {
+            buffer.push(character);
+            continue;
+        }
 
+        if !(buffer.is_empty()) {
+            let kind = String::from("literal");
+            pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
+        }
+
+        match character {
+            c if is_left_parenthesis(c) => {
                 buffer.push(character);
                 let kind = String::from("left_parenthesis");
                 pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
             },
             c if is_right_parenthesis(c) => {
-                if !(buffer.is_empty()) {
-                    let kind = String::from("literal");
-                    pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
-                }
-
                 buffer.push(character);
                 let kind = String::from("right_parenthesis");
                 pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
             },
             c if is_operator(c) => {
-                if !(buffer.is_empty()) {
-                    let kind = String::from("literal");
-                    pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
-                }
-
                 buffer.push(character);
                 let kind = String::from("operator");
                 pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
