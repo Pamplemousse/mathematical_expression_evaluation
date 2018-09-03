@@ -39,6 +39,14 @@ pub fn tokenize(expression: &str) -> Vec<Token> {
         }
     }
 
+    fn is_left_parenthesis(c: char) -> bool {
+        c == '('
+    }
+
+    fn is_right_parenthesis(c: char) -> bool {
+        c == ')'
+    }
+
     fn pop_buffer_to_tokens(buffer: &mut Vec<char>, tokens: &mut Vec<Token>, kind: String) {
         tokens.push(
             Token { kind: kind,
@@ -55,6 +63,26 @@ pub fn tokenize(expression: &str) -> Vec<Token> {
             c if is_digit(c) => {
                 buffer.push(character);
             },
+            c if is_left_parenthesis(c) => {
+                if !(buffer.is_empty()) {
+                    let kind = String::from("literal");
+                    pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
+                }
+
+                buffer.push(character);
+                let kind = String::from("left_parenthesis");
+                pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
+            },
+            c if is_right_parenthesis(c) => {
+                if !(buffer.is_empty()) {
+                    let kind = String::from("literal");
+                    pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
+                }
+
+                buffer.push(character);
+                let kind = String::from("right_parenthesis");
+                pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
+            },
             c if is_operator(c) => {
                 if !(buffer.is_empty()) {
                     let kind = String::from("literal");
@@ -69,9 +97,11 @@ pub fn tokenize(expression: &str) -> Vec<Token> {
         };
     }
 
-    // A valid expression will never end with an operator
-    let kind = String::from("literal");
-    pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
+    // If the expression finishes with a literal, the buffer will contain it
+    if !(buffer.is_empty()) {
+        let kind = String::from("literal");
+        pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
+    }
 
     return tokens;
 }
@@ -108,5 +138,23 @@ mod tests {
             .for_each(|token| expected_result.push(token));
 
         assert_eq!(result, expected_result);
+    }
+
+    #[test]
+    fn tokenize_deals_with_parentheses() {
+        let string = "2*(4-3)";
+        let result: Vec<Token> = tokenize(string);
+
+        let mut expected_result: Vec<Token> = Vec::new();
+
+        [("literal", "2"), ("operator", "*"), ("left_parenthesis", "("),
+         ("literal", "4"), ("operator", "-"), ("literal", "3"),
+         ("right_parenthesis", ")")]
+            .iter()
+            .map(|tuple| (String::from(tuple.0), String::from(tuple.1)))
+            .map(|tuple| Token { kind: tuple.0, value: tuple.1 })
+            .for_each(|token| expected_result.push(token));
+
+       assert_eq!(result, expected_result);
     }
 }
