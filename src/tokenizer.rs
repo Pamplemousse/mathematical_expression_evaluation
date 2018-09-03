@@ -86,9 +86,11 @@ mod tests {
         let result: Vec<Token> = tokenize(string);
 
         let mut expected_result: Vec<Token> = Vec::new();
-        expected_result.push(Token { kind: String::from("literal"), value: String::from("2") });
-        expected_result.push(Token { kind: String::from("operator"), value: String::from("*") });
-        expected_result.push(Token { kind: String::from("literal"), value: String::from("3") });
+        [("literal", "2"), ("operator", "*"), ("literal", "3")]
+            .iter()
+            .map(|tuple| (String::from(tuple.0), String::from(tuple.1)))
+            .map(|tuple| Token { kind: tuple.0, value: tuple.1 })
+            .for_each(|token| expected_result.push(token));
 
         assert_eq!(result, expected_result);
     }
@@ -99,9 +101,11 @@ mod tests {
         let result: Vec<Token> = tokenize(string);
 
         let mut expected_result: Vec<Token> = Vec::new();
-        expected_result.push(Token { kind: String::from("literal"), value: String::from("22") });
-        expected_result.push(Token { kind: String::from("operator"), value: String::from("*") });
-        expected_result.push(Token { kind: String::from("literal"), value: String::from("33") });
+        [("literal", "22"), ("operator", "*"), ("literal", "33")]
+            .iter()
+            .map(|tuple| (String::from(tuple.0), String::from(tuple.1)))
+            .map(|tuple| Token { kind: tuple.0, value: tuple.1 })
+            .for_each(|token| expected_result.push(token));
 
         assert_eq!(result, expected_result);
     }
