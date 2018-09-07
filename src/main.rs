@@ -1,7 +1,8 @@
 use std::env;
 
 mod tokenizer;
-use tokenizer::*;
+use tokenizer::tokenize;
+use tokenizer::token::Token;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
