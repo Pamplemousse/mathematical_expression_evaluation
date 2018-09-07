@@ -1,21 +1,7 @@
 pub mod token;
-use self::token::Token;
+use self::token::*;
 
 pub fn tokenize(expression: &str) -> Vec<Token> {
-    fn is_digit(c: char) -> bool {
-        match c {
-            '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => true,
-            _ => false
-        }
-    }
-
-    fn is_operator(c: char) -> bool {
-        match c {
-            '+' | '-' | '*' | '/' | '^' => true,
-            _ => false
-        }
-    }
-
     fn is_left_parenthesis(c: char) -> bool {
         c == '('
     }
