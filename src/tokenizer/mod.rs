@@ -1,62 +1,46 @@
 pub mod token;
 use self::token::*;
+use self::token::literal::Literal;
+use self::token::literal::digit::Digit;
+use self::token::operator::Operator;
 
 pub fn tokenize(expression: &str) -> Vec<Token> {
-    fn is_left_parenthesis(c: char) -> bool {
-        c == '('
-    }
-
-    fn is_right_parenthesis(c: char) -> bool {
-        c == ')'
-    }
-
-    fn pop_buffer_to_tokens(buffer: &mut Vec<char>, tokens: &mut Vec<Token>, kind: String) {
-        tokens.push(
-            Token { kind: kind,
-                    value: buffer.clone().into_iter().collect() }
+    fn pop_literal_buffer_to_tokens(buffer: &mut Vec<Digit>, tokens: &mut Vec<Token>) {
+        let token: Token = Token::Literal(
+            Literal::new(buffer.clone())
         );
+        tokens.push(token);
         buffer.clear();
     }
 
     let mut tokens: Vec<Token> = Vec::new();
-    let mut buffer: Vec<char> = Vec::new();
+    let mut literal_buffer: Vec<Digit> = Vec::new();
 
     for character in expression.chars() {
-        if is_digit(character) {
-            buffer.push(character);
-            continue;
+        let digit: Option<Digit> = Digit::new(character);
+        match digit {
+            Some(digit) => {
+                literal_buffer.push(digit);
+                continue;
+            },
+            None => ()
         }
 
-        if !(buffer.is_empty()) {
-            let kind = String::from("literal");
-            pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
+        if !(literal_buffer.is_empty()) {
+            pop_literal_buffer_to_tokens(&mut literal_buffer, &mut tokens);
         }
 
-        buffer.push(character);
+        let token: Option<Token> = Token::from_char(character);
 
-        let kind: Option<String> = match character {
-            c if is_left_parenthesis(c) => {
-                Some(String::from("left_parenthesis"))
-            },
-            c if is_right_parenthesis(c) => {
-                Some(String::from("right_parenthesis"))
-            },
-            c if is_operator(c) => {
-                Some(String::from("operator"))
-            },
-            _ => None
-        };
-
-        match kind {
-            Some(kind) => pop_buffer_to_tokens(&mut buffer, &mut tokens, kind),
+        match token {
+            Some(token) => tokens.push(token),
             _ => ()
         }
     }
 
     // If the expression finishes with a literal, the buffer will contain it
-    if !(buffer.is_empty()) {
-        let kind = String::from("literal");
-        pop_buffer_to_tokens(&mut buffer, &mut tokens, kind);
+    if !(literal_buffer.is_empty()) {
+        pop_literal_buffer_to_tokens(&mut literal_buffer, &mut tokens);
     }
 
     return tokens;
@@ -65,18 +49,19 @@ pub fn tokenize(expression: &str) -> Vec<Token> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use super::token::literal::Literal;
+    use super::token::operator::Operator;
 
     #[test]
     fn tokenize_creates_tokens_from_a_string() {
         let string = "2*3";
         let result: Vec<Token> = tokenize(string);
 
-        let mut expected_result: Vec<Token> = Vec::new();
-        [("literal", "2"), ("operator", "*"), ("literal", "3")]
-            .iter()
-            .map(|tuple| (String::from(tuple.0), String::from(tuple.1)))
-            .map(|tuple| Token { kind: tuple.0, value: tuple.1 })
-            .for_each(|token| expected_result.push(token));
+        let expected_result: Vec<Token> = [
+            Token::Literal(Literal::from(String::from("2"))),
+            Token::Operator(Operator::Times),
+            Token::Literal(Literal::from(String::from("3")))
+        ].to_vec();
 
         assert_eq!(result, expected_result);
     }
@@ -86,12 +71,11 @@ mod tests {
         let string = "22*33";
         let result: Vec<Token> = tokenize(string);
 
-        let mut expected_result: Vec<Token> = Vec::new();
-        [("literal", "22"), ("operator", "*"), ("literal", "33")]
-            .iter()
-            .map(|tuple| (String::from(tuple.0), String::from(tuple.1)))
-            .map(|tuple| Token { kind: tuple.0, value: tuple.1 })
-            .for_each(|token| expected_result.push(token));
+        let expected_result: Vec<Token> = [
+            Token::Literal(Literal::from(String::from("22"))),
+            Token::Operator(Operator::Times),
+            Token::Literal(Literal::from(String::from("33")))
+        ].to_vec();
 
         assert_eq!(result, expected_result);
     }
@@ -101,15 +85,15 @@ mod tests {
         let string = "2*(4-3)";
         let result: Vec<Token> = tokenize(string);
 
-        let mut expected_result: Vec<Token> = Vec::new();
-
-        [("literal", "2"), ("operator", "*"), ("left_parenthesis", "("),
-         ("literal", "4"), ("operator", "-"), ("literal", "3"),
-         ("right_parenthesis", ")")]
-            .iter()
-            .map(|tuple| (String::from(tuple.0), String::from(tuple.1)))
-            .map(|tuple| Token { kind: tuple.0, value: tuple.1 })
-            .for_each(|token| expected_result.push(token));
+        let expected_result: Vec<Token> = [
+            Token::Literal(Literal::from(String::from("2"))),
+            Token::Operator(Operator::Times),
+            Token::LeftParenthesis,
+            Token::Literal(Literal::from(String::from("4"))),
+            Token::Operator(Operator::Minus),
+            Token::Literal(Literal::from(String::from("3"))),
+            Token::RightParenthesis
+        ].to_vec();
 
        assert_eq!(result, expected_result);
     }
