@@ -1,5 +1,6 @@
 use std::fmt::{Debug, Display, Formatter, Error};
 
+#[derive(Clone)]
 pub enum Digit {
     Zero, One, Two, Three, Four, Five, Six, Seven, Eight, Nine
 }

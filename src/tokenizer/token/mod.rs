@@ -3,8 +3,8 @@ use std::fmt::{Debug, Display, Formatter, Error};
 pub mod operator;
 use self::operator::Operator;
 
-pub mod digit;
-use self::digit::Digit;
+pub mod literal;
+use self::literal::digit::Digit;
 
 pub fn is_digit(c: char) -> bool {
     match Digit::new(c) {
