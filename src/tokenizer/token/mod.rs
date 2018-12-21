@@ -5,7 +5,6 @@ use self::operator::Operator;
 
 pub mod literal;
 use self::literal::Literal;
-use self::literal::digit::Digit;
 
 fn is_left_parenthesis(c: char) -> bool {
     c == '('

@@ -2,7 +2,6 @@ pub mod token;
 use self::token::*;
 use self::token::literal::Literal;
 use self::token::literal::digit::Digit;
-use self::token::operator::Operator;
 
 pub fn tokenize(expression: &str) -> Vec<Token> {
     fn pop_literal_buffer_to_tokens(buffer: &mut Vec<Digit>, tokens: &mut Vec<Token>) {
