@@ -10,17 +10,6 @@ impl Literal {
     pub fn new(digits: Vec<Digit>) -> Literal {
         return Literal(digits);
     }
-
-    pub fn from(string: String) -> Literal {
-        Literal::new(
-            string
-                .chars()
-                .map(|c| Digit::new(c))
-                .filter(|c| c.is_some())
-                .map(|c| c.unwrap())
-                .collect()
-        )
-    }
 }
 
 impl Display for Literal {
@@ -30,6 +19,19 @@ impl Display for Literal {
             .map(|digit| digit.to_char())
             .collect();
         write!(f, "{}", string)
+    }
+}
+
+impl From<String> for Literal {
+    fn from(string: String) -> Self {
+        Literal::new(
+            string
+                .chars()
+                .map(|c| Digit::new(c))
+                .filter(|c| c.is_some())
+                .map(|c| c.unwrap())
+                .collect()
+        )
     }
 }
 
