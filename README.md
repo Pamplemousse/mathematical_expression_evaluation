@@ -21,6 +21,20 @@ nix-shell -p cargo rustc
 ```
 
 
+## Possible features
+
+  * functions: pi(), sin(), cos()
+  * floating points numbers: 3.14
+  * validate input (verify matching parenthesis, verify integer size etc.)
+  * help
+
+### Refactor
+
+  * use [`TryFrom`](https://doc.rust-lang.org/std/convert/trait.TryFrom.html) trait (in `src/tokenizer/token/mod.rs`, `src/tokenizer/token/operator.rs`)
+  * use [`Deref` and `DerefMut`]() in particular in the Shunting Yard algorithm
+  * implement some property based testing
+
+
 ## Resources
 
 Heavily inspired from:
