@@ -17,7 +17,7 @@ cargo run 22+3*44
 ## Dev
 
 ```bash
-nix-shell -p cargo
+nix-shell -p cargo rustc
 ```
 
 
