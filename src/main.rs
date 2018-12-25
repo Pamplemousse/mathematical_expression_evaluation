@@ -1,6 +1,9 @@
 use std::env;
 
+mod parser;
 mod tokenizer;
+
+use parser::parse;
 use tokenizer::tokenize;
 use tokenizer::token::Token;
 
@@ -9,7 +12,6 @@ fn main() {
     let string = &args[1];
 
     let tokens: Vec<Token> = tokenize(string);
-    for token in tokens {
-        println!("{}", token)
-    }
+    let ast: Vec<Token> = parse(tokens);
+    println!("{:?}", ast);
 }

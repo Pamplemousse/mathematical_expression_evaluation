@@ -26,3 +26,4 @@ nix-shell -p cargo
 Heavily inspired from:
   * [How to build a math expression tokenizer using JavaScript](https://medium.freecodecamp.org/how-to-build-a-math-expression-tokenizer-using-javascript-3638d4e5fbe9)
   * [https://www.esimovmiras.cc/articles/](https://www.esimovmiras.cc/articles/)
+  * [Shunting yard algorithm](https://en.wikipedia.org/wiki/Shunting-yard_algorithm)
