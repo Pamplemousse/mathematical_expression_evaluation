@@ -11,7 +11,6 @@ pub fn parse(tokens: Vec<Token>) -> Vec<Token> {
                 while operator_stack.len() > 0 {
                     let top_token: Token = operator_stack.last().unwrap().clone();
 
-                    // The operator_stack only holds LeftParentheses and Operators
                     match top_token {
                         Token::LeftParenthesis => break,
                         Token::Operator(top_operator) => {
@@ -20,7 +19,7 @@ pub fn parse(tokens: Vec<Token>) -> Vec<Token> {
                                 ast.push(Token::Operator(top_operator));
                             } else { break; }
                         }
-                        _ => ()
+                        _ => panic!("Dev error: The operator_stack should only hold LeftParentheses and Operators."),
                     }
                 }
 
@@ -31,7 +30,6 @@ pub fn parse(tokens: Vec<Token>) -> Vec<Token> {
                 while operator_stack.len() > 0 {
                     let top_token: Token = operator_stack.last().unwrap().clone();
 
-                    // The operator_stack only holds LeftParentheses and Operators
                     match top_token {
                         Token::LeftParenthesis => {
                             operator_stack.pop();
@@ -41,7 +39,7 @@ pub fn parse(tokens: Vec<Token>) -> Vec<Token> {
                             operator_stack.pop();
                             ast.push(Token::Operator(top_operator));
                         }
-                        _ => ()
+                        _ => panic!("Dev error: The operator_stack should only hold LeftParentheses and Operators."),
                     }
                 }
             },

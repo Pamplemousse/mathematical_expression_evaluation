@@ -5,7 +5,6 @@ pub fn interpret(tokens: Vec<Token>) -> f32 {
     let mut operands: Vec<f32> = Vec::new();
 
 	for token in tokens {
-        // The AST only contains Operators and Literals
 		match token {
 			Token::Operator(operator) => {
                 let second_operand = operands.pop().unwrap();
@@ -26,7 +25,7 @@ pub fn interpret(tokens: Vec<Token>) -> f32 {
                 let operand: f32 = literal.to_string().parse::<f32>().unwrap();
                 operands.push(operand);
             }
-            _ => ()
+            _ => panic!("Dev error: The AST should only contains Operators and Literals."),
 		}
 	}
 
