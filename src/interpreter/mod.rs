@@ -1,5 +1,4 @@
 use tokenizer::token::Token;
-use tokenizer::token::operator::Operator;
 
 pub fn interpret(tokens: Vec<Token>) -> f32 {
     let mut operands: Vec<f32> = Vec::new();
@@ -9,15 +8,7 @@ pub fn interpret(tokens: Vec<Token>) -> f32 {
 			Token::Operator(operator) => {
                 let second_operand = operands.pop().unwrap();
                 let first_operand = operands.pop().unwrap();
-                let result: f32;
-
-                result = match operator {
-                    Operator::Plus => first_operand + second_operand,
-                    Operator::Times => first_operand * second_operand,
-                    Operator::Minus => first_operand - second_operand,
-                    Operator::Slash => first_operand / second_operand,
-                    Operator::Caret => first_operand.powf(second_operand)
-                };
+                let result: f32 = operator.call(first_operand, second_operand);
 
                 operands.push(result);
 			}

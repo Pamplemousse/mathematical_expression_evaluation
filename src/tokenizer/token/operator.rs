@@ -1,3 +1,4 @@
+use std::ops::{Add, Div, Mul, Sub};
 use std::cmp::Ordering;
 use std::fmt::{Debug, Display, Formatter, Error};
 
@@ -7,6 +8,17 @@ pub enum Operator {
 }
 
 impl Operator {
+    pub fn call(&self, first_operand: f32, second_operand: f32) -> f32 {
+        let operator: fn(f32, f32) -> f32 = match *self {
+            Operator::Plus => <f32 as Add>::add,
+            Operator::Times => <f32 as Mul>::mul,
+            Operator::Minus => <f32 as Sub>::sub,
+            Operator::Slash => <f32 as Div>::div,
+            Operator::Caret => f32::powf,
+        };
+        operator(first_operand, second_operand)
+    }
+
     pub fn new(c: char) -> Option<Operator> {
         match c {
             '+' => Some(Operator::Plus),
@@ -152,6 +164,81 @@ mod tests {
             true, true, true, true, true, true,
             false, false, false, false, false, false
         ];
+
+        assert_eq!(result, expected_result);
+    }
+
+    #[test]
+    fn operator_plus_computes_an_addition() {
+        let first_operand: [f32; 2] = [1.0, 2.0];
+        let second_operand: [f32; 2] = [1.0, 1.0];
+
+        let result: Vec<f32> = first_operand
+            .iter()
+            .zip(second_operand.iter())
+            .map(|(c1, c2)| Operator::Plus.call(*c1, *c2))
+            .collect();
+        let expected_result: [f32; 2] = [2.0, 3.0];
+
+        assert_eq!(result, expected_result);
+    }
+
+    #[test]
+    fn operator_minus_computes_a_substraction() {
+        let first_operand: [f32; 2] = [1.0, 2.0];
+        let second_operand: [f32; 2] = [1.0, 1.0];
+
+        let result: Vec<f32> = first_operand
+            .iter()
+            .zip(second_operand.iter())
+            .map(|(c1, c2)| Operator::Minus.call(*c1, *c2))
+            .collect();
+        let expected_result: [f32; 2] = [0.0, 1.0];
+
+        assert_eq!(result, expected_result);
+    }
+
+    #[test]
+    fn operator_times_computes_a_multiplication() {
+        let first_operand: [f32; 3] = [1.0, 2.0, 3.0];
+        let second_operand: [f32; 3] = [1.0, 1.0, 2.0];
+
+        let result: Vec<f32> = first_operand
+            .iter()
+            .zip(second_operand.iter())
+            .map(|(c1, c2)| Operator::Times.call(*c1, *c2))
+            .collect();
+        let expected_result: [f32; 3] = [1.0, 2.0, 6.0];
+
+        assert_eq!(result, expected_result);
+    }
+
+    #[test]
+    fn operator_slash_computes_a_division() {
+        let first_operand: [f32; 3] = [1.0, 1.0, 3.0];
+        let second_operand: [f32; 3] = [1.0, 2.0, 2.0];
+
+        let result: Vec<f32> = first_operand
+            .iter()
+            .zip(second_operand.iter())
+            .map(|(c1, c2)| Operator::Slash.call(*c1, *c2))
+            .collect();
+        let expected_result: [f32; 3] = [1.0, 0.5, 1.5];
+
+        assert_eq!(result, expected_result);
+    }
+
+    #[test]
+    fn operator_caret_computes_a_exponentiation() {
+        let first_operand: [f32; 3] = [2.0, 2.0, 2.0];
+        let second_operand: [f32; 3] = [1.0, 2.0, 3.0];
+
+        let result: Vec<f32> = first_operand
+            .iter()
+            .zip(second_operand.iter())
+            .map(|(c1, c2)| Operator::Caret.call(*c1, *c2))
+            .collect();
+        let expected_result: [f32; 3] = [2.0, 4.0, 8.0];
 
         assert_eq!(result, expected_result);
     }
