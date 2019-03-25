@@ -8,16 +8,22 @@ Do not make this your official calculator.
 ## Usage
 
 ```bash
-cargo run <string to evaluate>
+math_eval <string to evaluate>
 
 # example
-cargo run 22+3*44
+math_eval 22+3*44
 ```
 
 ## Dev
 
 ```bash
-nix-shell -p cargo rustc
+nix-shell -p rustup
+
+# testing
+[nix-shell]$ cargo test
+
+# coding style
+[nix-shell]$ cargo clippy
 ```
 
 
