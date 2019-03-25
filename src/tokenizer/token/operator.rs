@@ -31,14 +31,13 @@ impl Operator {
     }
 
     pub fn to_char(&self) -> char {
-        let operator: char = match *self {
+        match *self {
             Operator::Plus => '+',
             Operator::Minus => '-',
             Operator::Times => '*',
             Operator::Slash => '/',
             Operator::Caret => '^'
-        };
-        return operator;
+        }
     }
 
     fn priority(&self) -> u32 {

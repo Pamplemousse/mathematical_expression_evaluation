@@ -8,7 +8,7 @@ pub struct Literal(Vec<Digit>);
 
 impl Literal {
     pub fn new(digits: Vec<Digit>) -> Literal {
-        return Literal(digits);
+        Literal(digits)
     }
 }
 
@@ -27,7 +27,7 @@ impl From<String> for Literal {
         Literal::new(
             string
                 .chars()
-                .map(|c| Digit::new(c))
+                .map(Digit::new)
                 .filter(|c| c.is_some())
                 .map(|c| c.unwrap())
                 .collect()

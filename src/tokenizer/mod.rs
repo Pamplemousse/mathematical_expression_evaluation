@@ -17,12 +17,10 @@ pub fn tokenize(expression: &str) -> Vec<Token> {
 
     for character in expression.chars() {
         let digit: Option<Digit> = Digit::new(character);
-        match digit {
-            Some(digit) => {
-                literal_buffer.push(digit);
-                continue;
-            },
-            None => ()
+
+        if let Some(digit) = digit {
+          literal_buffer.push(digit);
+          continue;
         }
 
         if !(literal_buffer.is_empty()) {
@@ -31,10 +29,7 @@ pub fn tokenize(expression: &str) -> Vec<Token> {
 
         let token: Option<Token> = Token::from_char(character);
 
-        match token {
-            Some(token) => tokens.push(token),
-            _ => ()
-        }
+        if let Some(token) = token { tokens.push(token) };
     }
 
     // If the expression finishes with a literal, the buffer will contain it
@@ -42,7 +37,7 @@ pub fn tokenize(expression: &str) -> Vec<Token> {
         pop_literal_buffer_to_tokens(&mut literal_buffer, &mut tokens);
     }
 
-    return tokens;
+    tokens
 }
 
 #[cfg(test)]

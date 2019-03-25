@@ -8,7 +8,7 @@ pub fn parse(tokens: Vec<Token>) -> Vec<Token> {
         match token {
             Token::Literal(_) => ast.push(token),
             Token::Operator(operator) => {
-                while operator_stack.len() > 0 {
+                while !operator_stack.is_empty() {
                     let top_token: Token = operator_stack.last().unwrap().clone();
 
                     match top_token {
@@ -27,7 +27,7 @@ pub fn parse(tokens: Vec<Token>) -> Vec<Token> {
             },
             Token::LeftParenthesis => operator_stack.push(token),
             Token::RightParenthesis => {
-                while operator_stack.len() > 0 {
+                while !operator_stack.is_empty() {
                     let top_token: Token = operator_stack.last().unwrap().clone();
 
                     match top_token {
@@ -49,7 +49,7 @@ pub fn parse(tokens: Vec<Token>) -> Vec<Token> {
     operator_stack.reverse();
     ast.append(&mut operator_stack);
 
-    return ast;
+    ast
 }
 
 #[cfg(test)]

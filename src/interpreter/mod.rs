@@ -20,7 +20,7 @@ pub fn interpret(tokens: Vec<Token>) -> f32 {
 		}
 	}
 
-    return operands.pop().unwrap();
+    operands.pop().unwrap()
 }
 
 #[cfg(test)]

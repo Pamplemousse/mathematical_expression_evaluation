@@ -23,7 +23,7 @@ impl Digit {
     }
 
     pub fn to_char(&self) -> char {
-        let operator: char = match *self {
+        match *self {
             Digit::Zero => '0',
             Digit::One => '1',
             Digit::Two => '2',
@@ -34,8 +34,7 @@ impl Digit {
             Digit::Seven => '7',
             Digit::Eight => '8',
             Digit::Nine => '9',
-        };
-        return operator;
+        }
     }
 }
 
